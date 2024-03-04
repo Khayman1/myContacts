@@ -4,7 +4,8 @@ const Contact = require("../models/contactModel");
 // @desc Get all contacts
 // @route Get /contacts
 const getAllContacts = asyncHandler(async (req, res) => {
-  res.status(200).send("Contacts Page");
+  const contacts = await Contact.find({});
+  res.status(200).send(contacts);
 });
 
 // @desc Create contacts
@@ -22,18 +23,32 @@ const createContact = asyncHandler(async (req, res) => {
 // @desc Get a contact
 // @route GET /contacts/:id
 const getContact = asyncHandler(async (req, res) => {
-  res.status(200).send(`view ${req.params.id}`);
+  const contact = await Contact.findById(req.params.id);
+  res.status(200).send(contact);
 });
 
 // @desc Put a contact
 // @route PUT /contacts/:id
 const updateContact = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { name, email, phone } = req.body;
+  const contact = await Contact.findById(id);
+  if (!contact) {
+    res.status(404);
+    throw new Error("연락처가 없습니다.");
+  }
+  contact.name = name;
+  contact.email = email;
+  contact.phone = phone;
+  contact.save();
   res.status(200).send(`update ${req.params.id}`);
 });
 
 // @desc Delete contacts
 // @route Delete /contacts/:id
 const deleteContact = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const contact = await Contact.findByIdAndDelete(id);
   res.status(200).send(`delete ${req.params.id}`);
 });
 
