@@ -24,12 +24,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/contacts", require("./routes/contactRoutes"));
 
-app.get("/test", (req, res, next) => {
-  const error = new Error("테스트용 에러");
-  error.status = 401;
-  next(error);
-});
-app.use(errorHandler);
+// app.get("/test", (req, res, next) => {
+//   const error = new Error("테스트용 에러");
+//   error.status = 401;
+//   next(error);
+// });
+// app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server listening from http://localhost:${PORT}`);

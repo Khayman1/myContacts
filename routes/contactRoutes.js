@@ -1,30 +1,18 @@
 const express = require("express");
+
+/* Controllers */
+const {
+  getAllContacts,
+  createContact,
+  getContact,
+  updateContact,
+  deleteContact,
+} = require("../controllers/contactController");
+
 const router = express.Router();
-const getAllContacts = require("../controllers/contactController");
 
-router
-  .route("/")
-  .get(getAllContacts)
-  .post((req, res) => {
-    console.log(req.body);
-    const { name, number, ccc } = req.body;
-    console.log(name, number, ccc);
-    if (!name || !number || !ccc) {
-      return res.status(400).send("입력 필드를 모두 채워주세요.");
-    }
-    res.status(201).send(`Create ${name}`);
-  });
+router.route("/").get(getAllContacts).post(createContact);
 
-router
-  .route("/:id")
-  .get((req, res) => {
-    res.status(200).send(`view ${req.params.id}`);
-  })
-  .put((req, res) => {
-    res.status(200).send(`update ${req.params.id}`);
-  })
-  .delete((req, res) => {
-    res.status(200).send(`delete ${req.params.id}`);
-  });
+router.route("/:id").get(getContact).put(updateContact).delete(deleteContact);
 
 module.exports = router;
