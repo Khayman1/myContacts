@@ -1,35 +1,26 @@
 const express = require("express");
-const errorHandler = require("./middlewares/errorHandler");
+// const errorHandler = require("./middlewares/errorHandler");
 const dbConnect = require("./config/dbConnect");
-
+const methodOverride = require("method-override");
 const app = express();
+app.set("view engine","ejs");
+app.set("views","./views");
+
+app.use(express.static("./public"))
+app.use(methodOverride("_method"))
+
 const PORT = 3000;
 dbConnect();
 
-const requestTime = (req, res, next) => {
-  let today = new Date();
-  let now = today.toLocaleTimeString();
-  req.requestTime = now;
-  next();
-};
-
-app.use(requestTime);
-
-app.get("/", function (req, res) {
-  res.json({ reqTime: req.requestTime, message: "Hello, Node" });
-});
+// app.get("/", function (req, res) {
+//   res.json({ reqTime: req.requestTime, message: "Hello, Node" });
+// });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/",require("./routes/loginRoutes"));
 app.use("/contacts", require("./routes/contactRoutes"));
-
-// app.get("/test", (req, res, next) => {
-//   const error = new Error("테스트용 에러");
-//   error.status = 401;
-//   next(error);
-// });
-// app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server listening from http://localhost:${PORT}`);
